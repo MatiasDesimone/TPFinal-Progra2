@@ -3,6 +3,7 @@ package org.example.models.lists;
 import org.example.exceptions.InvalidFieldException;
 import org.example.interfaces.ICRUD;
 import org.example.models.Address;
+import org.example.models.Bank;
 import org.example.models.Client;
 
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
     @Override
     public void create() {
         Client client = createClient();
-        add(client);
+        Bank.getInstance().getClients().add(client);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if (name == null) {
                     System.out.println("Ingrese el nombre del cliente:");
                     name = scanner.nextLine();
-                    if (!validateField(name, nameOrLastNameRegex)) {
+                    if (!validateField(name, NAME_OR_LAST_NAME_REGEX)) {
                         name = null;
                         throw new InvalidFieldException("Nombre invalido. Por favor, intente nuevamente.");
                     }
@@ -64,7 +65,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if (lastName == null) {
                     System.out.println("Ingrese el apellido del cliente:");
                     lastName = scanner.nextLine();
-                    if (!validateField(lastName, nameOrLastNameRegex)) {
+                    if (!validateField(lastName, NAME_OR_LAST_NAME_REGEX)) {
                         lastName = null;
                         throw new InvalidFieldException("Apellido invalido. Por favor, intente nuevamente.");
                     }
@@ -73,7 +74,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if (email == null) {
                     System.out.println("Ingrese el email del cliente:");
                     email = scanner.nextLine();
-                    if (!validateField(email, emailRegex)) {
+                    if (!validateField(email, EMAIL_REGEX)) {
                         email = null;
                         throw new InvalidFieldException("Email invalido. Por favor, intente nuevamente.");
                     }
@@ -86,7 +87,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if(password == null) {
                     System.out.println("Ingrese la contraseña del cliente:");
                     password = scanner.nextLine();
-                    if (!validateField(password, passwordRegex)) {
+                    if (!validateField(password, PASSWORD_REGEX)) {
                         password = null;
                         throw new InvalidFieldException("Contraseña invalida. Por favor, intente nuevamente.");
                     }
@@ -95,7 +96,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if (dni == null) {
                     System.out.println("Ingrese el DNI del cliente:");
                     dni = scanner.nextLine();
-                    if (!validateField(dni, dniRegex)) {
+                    if (!validateField(dni, DNI_REGEX)) {
                         dni = null;
                         throw new InvalidFieldException("DNI invalido. Por favor, intente nuevamente.");
                     }
@@ -108,7 +109,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 if (phone == null) {
                     System.out.println("Ingrese el telefono del cliente:");
                     phone = scanner.nextLine();
-                    if (!validateField(phone, phoneRegex)) {
+                    if (!validateField(phone, PHONE_REGEX)) {
                         phone = null;
                         throw new InvalidFieldException("Telefono invalido. Por favor, intente nuevamente.");
                     }

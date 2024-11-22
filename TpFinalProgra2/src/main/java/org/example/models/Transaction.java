@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Transaction {
-    private String accountId;
-    private String cardId;
+    private String accountOwnerId;
+    private String accountRecipientId;
     private String transactionId;
     private double amount;
     private String description;
@@ -17,9 +17,9 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String accountId, String cardId, double amount, String description, LocalDateTime date, EStatus status) {
-        this.accountId = accountId;
-        this.cardId = cardId;
+    public Transaction(String accountOwnerId, String accountRecipientId, double amount, String description, LocalDateTime date, EStatus status) {
+        this.accountOwnerId = accountOwnerId;
+        this.accountRecipientId = accountRecipientId;
         this.transactionId = UUID.randomUUID().toString();
         this.amount = amount;
         this.description = description;
