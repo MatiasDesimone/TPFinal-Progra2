@@ -1,5 +1,6 @@
 package org.example.models;
 
+import org.example.enums.EAccountType;
 import org.example.models.lists.Accounts;
 import org.example.models.lists.Cards;
 import org.example.models.lists.Transactions;
@@ -111,5 +112,17 @@ public class Client extends Person {
         result = 31 * result + dni.hashCode();
         result = 31 * result + phone.hashCode();
         return result;
+    }
+
+    public Account getAccountByType(EAccountType accountType) {
+        return accounts.getList().stream().filter(account -> account.getAccountType() == accountType).findFirst().orElse(null);
+    }
+
+    public Account getAccountByAlias(String alias) {
+        return accounts.getList().stream().filter(account -> account.getAlias().equals(alias)).findFirst().orElse(null);
+    }
+
+    public Account getAccountByCBU(String cbu) {
+        return accounts.getList().stream().filter(account -> account.getCbu().equals(cbu)).findFirst().orElse(null);
     }
 }

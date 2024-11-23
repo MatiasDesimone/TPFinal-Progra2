@@ -22,6 +22,9 @@ public class ValidationUtils {
     public static final String POSTAL_CODE_REGEX = "^[0-9]{1,5}$";
     public static final String BALANCE_REGEX = "^[0-9]\\d{5,}$";
     public static final String BANK_IDENTIFIER = "01500013";
+    public static final String CBU_REGEX = "^[0-9]{22}$";
+    public static final String ALIAS_REGEX = "^[A-Z]+\\.[A-Z]+\\.[A-Z]+$";
+    public static final String AMOUNT_REGEX = "^[0-9]{4,9}$";
 
     public static boolean validateField(String field, String regex) {
         return field != null && !field.isEmpty() && !field.isBlank() && field.matches(regex);

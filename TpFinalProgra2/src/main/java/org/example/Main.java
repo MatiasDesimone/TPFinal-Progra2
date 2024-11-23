@@ -8,7 +8,7 @@ public class Main {
     }
 }
 
-//TODO: generacion tarjetas, cuentas, transacciones, quiza compras por puntos, comprobantes, JSON.
+//TODO: , , , quiza compras por puntos, comprobantes, JSON.
 
 //<dependency>
 //    <groupId>org.xhtmlrenderer</groupId>
