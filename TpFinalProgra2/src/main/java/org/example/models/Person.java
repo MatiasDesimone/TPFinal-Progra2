@@ -62,4 +62,12 @@ public abstract class Person {
     public int hashCode() {
         return email.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return  "\nNombre: " + name +
+                "\nApellido: " + lastName +
+                "\nEmail: " + email +
+                "\nContraseña: " + password;
+    }
 }

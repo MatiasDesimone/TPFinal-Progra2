@@ -74,7 +74,7 @@ public class Address {
         this.postalCode = postalCode;
     }
 
-    public Address create() {
+    public Address createAddress() {
         Scanner scanner = new Scanner(System.in);
         String street = null;
         String number = null;
@@ -146,4 +146,15 @@ public class Address {
         }
     }
 
+    @Override
+    public String toString() {
+        return  "\n-------------------Domicilio-------------------" +
+                "\nCalle: " + street +
+                "\nNumero: " + number +
+                "\nCiudad: " + city +
+                "\nProvincia: " + state +
+                "\nPaís: " + country +
+                "\nCódigo postal: " + postalCode +
+                "\n----------------------------------------------";
+    }
 }

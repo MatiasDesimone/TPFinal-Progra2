@@ -14,6 +14,7 @@ public class Card {
     private String cvv;
     private LocalDate expirationDate;
     private ECard type;
+    private boolean active;
 
 
     public Card() {
@@ -26,6 +27,7 @@ public class Card {
         this.cvv = generateRandomCvv();
         this.expirationDate = generateRandomExpirationDate(type);
         this.type = type;
+        this.active = true;
     }
 
     public String getClientId() {
@@ -76,6 +78,14 @@ public class Card {
         this.type = type;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,5 +131,19 @@ public class Card {
         LocalDate currentDate = LocalDate.now();
         int yearsToAdd = (type == ECard.CREDIT) ? 5 : 4;
         return currentDate.plusYears(yearsToAdd);
+    }
+
+    private String maskCardNumber() {
+   return "**** **** **** " + this.number.substring(this.number.length() - 4);
+    }
+
+    @Override
+    public String toString() {
+        return  "\n------------------------Tarjeta------------------------" +
+                "\nNúmero de tarjeta: " + maskCardNumber() +
+                "\nFecha de vencimiento: " + expirationDate +
+                "\nTipo de tarjeta: " + type.getDescription() +
+                "\nActiva: " + active +
+                "\n------------------------------------------------------";
     }
 }

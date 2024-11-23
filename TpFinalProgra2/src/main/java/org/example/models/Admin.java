@@ -4,7 +4,7 @@ import org.example.interfaces.IShow;
 
 import java.util.UUID;
 
-public class Admin extends Person implements IShow {
+public class Admin extends Person {
     private String adminId;
 
     public Admin() {
@@ -23,7 +23,29 @@ public class Admin extends Person implements IShow {
         this.adminId = adminId;
     }
 
+    public static Admin getAdminByEmail(String email) {
+        for (Admin admin : Bank.getInstance().getAdmins().getList()) {
+            if (admin.getEmail().equals(email)) {
+                return admin;
+            }
+        }
+        return null;
+    }
+
+    public static Admin getAdminByEmailAndPassword(String email, String password) {
+        for (Admin admin : Bank.getInstance().getAdmins().getList()) {
+            if (admin.getEmail().equals(email) && admin.getPassword().equals(password)) {
+                return admin;
+            }
+        }
+        return null;
+    }
+
     @Override
-    public void show() {
+    public String toString() {
+        return "\n------------------------Administrador------------------------" +
+                super.toString() +
+                "ID de Administrador: " + adminId +
+                "\n------------------------------------------------------------";
     }
 }

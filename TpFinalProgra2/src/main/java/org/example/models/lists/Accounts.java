@@ -10,8 +10,7 @@ import org.example.utils.ValidationUtils;
 
 import java.util.Scanner;
 
-import static org.example.utils.ValidationUtils.getLoggedInClient;
-import static org.example.utils.ValidationUtils.uniqueAccountVerifier;
+import static org.example.utils.ValidationUtils.*;
 
 public class Accounts extends GenericList<Account> implements ICRUD {
 
@@ -26,12 +25,17 @@ public class Accounts extends GenericList<Account> implements ICRUD {
     @Override
     public void create() {
         Account account = createAccount();
-        Bank.getInstance().getLoggedInClient().getAccounts().add(account);
+        if(account != null){
+            Bank.getInstance().getLoggedInClient().getAccounts().add(account);
+            System.out.println("Cuenta creada exitosamente.");
+        }
     }
 
     @Override
     public void read() {
-
+        Client client = Bank.getInstance().getLoggedInClient();
+        if(clientCheck(client)) return;
+        readAccount(client);
     }
 
     @Override
@@ -56,21 +60,19 @@ public class Accounts extends GenericList<Account> implements ICRUD {
                 if(accountType == null) {
                     System.out.println("Ingrese el numero del tipo de cuenta que desea crear:");
                     for (EAccountType type : EAccountType.values()) {
-                        System.out.println(type.getTypeId() + ". " + type.getDescription());
+                        System.out.println(type.getTypeId() + ") " + type.getDescription());
                     }
+                    System.out.println("0) Cancelar.");
                     int option = scanner.nextInt();
                     scanner.nextLine();
-                    if (option == 1) {
-                        accountType = EAccountType.CAJA_AHORRO;
+                    if (option == 0) {
+                        System.out.println("Creación de cuenta cancelada.");
+                        return null;
                     }
-                    if (option == 2) {
-                        accountType = EAccountType.CUENTA_CORRIENTE;
+                    if (option < 1 || option > EAccountType.values().length) {
+                        throw new InvalidFieldException("Opción inválida. Por favor, intente nuevamente.");
                     }
-                    if (option == 3){
-                        accountType = EAccountType.CUENTA_DOLARES;
-                    } else {
-                        throw new InvalidFieldException("Opcion inválida. Por favor, intente nuevamente.");
-                    }
+                    accountType = EAccountType.values()[option - 1];
                 }
                 if(!uniqueAccountVerifier(loggedClient, accountType)) {
                     accountType = null;
@@ -96,6 +98,16 @@ public class Accounts extends GenericList<Account> implements ICRUD {
         }
     }
 
-
-
+    public static void readAccount(Client client) {
+        System.out.println("--------------Cuentas--------------\n");
+        for(Account account : client.getAccounts().getList()){
+            System.out.println("Tipo de cuenta: " + account.getAccountType().getDescription());
+            System.out.println("CBU: " + account.getCbu());
+            System.out.println("Alias: " + account.getAlias());
+            System.out.println("Saldo: " + account.getBalance());
+            System.out.println("Fecha de creación: " + account.getCreatedAt());
+            System.out.println("Costo de mantenimiento: " + account.getMaintenanceFee());
+            System.out.println("-----------------------------------\n");
+        }
+    }
 }

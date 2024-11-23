@@ -6,6 +6,9 @@ import org.example.models.lists.Clients;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.example.models.Admin.getAdminByEmailAndPassword;
+import static org.example.models.Client.getClientByEmailAndPassword;
+
 public class Bank {
     private String name;
     private Address address;
@@ -15,14 +18,19 @@ public class Bank {
     private Admins admins;
     private static Bank instance;
     private Client loggedInClient;
+    private Admin loggedAdmin;
     private Set<String> existingCardNumbers = new HashSet<>();
     private Set<String> existingAlias = new HashSet<>();
     private Set<String> existingCBU = new HashSet<>();
 
 
-    public Bank() {
-        this.clients = new Clients();
-        this.admins = new Admins();
+    private Bank() {
+        this.name = "Industrial and Commercial Bank of Java";
+        this.address = new Address("Av. Rivadavia", "1234", "CABA", "CABA", "Argentina", "C1405DJR");
+        this.phone = "0800-333-1234";
+        this.email = "icbj@bank.com";
+        clients = new Clients();
+        admins = new Admins();
     }
 
     public static Bank getInstance() {
@@ -92,6 +100,14 @@ public class Bank {
         this.loggedInClient = loggedInClient;
     }
 
+    public Admin getLoggedAdmin() {
+        return loggedAdmin;
+    }
+
+    public void setLoggedAdmin(Admin loggedAdmin) {
+        this.loggedAdmin = loggedAdmin;
+    }
+
     public Set<String> getExistingCardNumbers() {
         return existingCardNumbers;
     }
@@ -115,4 +131,26 @@ public class Bank {
     public void setExistingCBU(Set<String> existingCBU) {
         this.existingCBU = existingCBU;
     }
+
+
+    public boolean login(String email, String password) {
+        Admin admin = getAdminByEmailAndPassword(email, password);
+        if (admin != null) {
+            Bank.getInstance().setLoggedAdmin(admin);
+            System.out.println("Administrador logueado exitosamente.");
+            return true;
+        }
+
+        Client client = getClientByEmailAndPassword(email, password);
+        if (client != null) {
+            Bank.getInstance().setLoggedInClient(client);
+            System.out.println("Cliente logueado exitosamente.");
+            return true;
+        } else {
+            System.out.println("Usuario no encontrado o contraseña incorrecta.");
+        }
+        return false;
+    }
+
+
 }
