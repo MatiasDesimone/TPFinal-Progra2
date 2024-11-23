@@ -29,13 +29,18 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
     @Override
     public void create() {
         Transaction transaction = createTransaction();
-        Bank.getInstance().getLoggedInClient().getTransactions().add(transaction);
+        if(transaction != null){
+            Bank.getInstance().getLoggedInClient().getTransactions().add(transaction);
+            System.out.println("Transacción realizada exitosamente.");
+        }
 
     }
 
     @Override
     public void read() {
-
+        Client client = Bank.getInstance().getLoggedInClient();
+        if(clientCheck(client)) return;
+        readTransactions(client);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                 }
 
                 if(description == null){
-                    System.out.println("Ingrese el número de la descripción de la transacción:");
+                    System.out.println("Seleccione la opción que describa la operación:");
                     for(ETransactionDescription transactionDescription : ETransactionDescription.values()){
                         System.out.println(transactionDescription.getTypeId() + ") " + transactionDescription.getDescription());
                     }
@@ -166,4 +171,17 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
         }
     }
 
+    public static void readTransactions(Client client){
+        System.out.println("\n------------------------Transacciones------------------------");
+        for(Transaction transaction : client.getTransactions().getList()){
+            System.out.println("ID de transacción: " + transaction.getTransactionId());
+            System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
+            System.out.println("CBU del destinatario: " + transaction.getRecipientCBU());
+            System.out.println("Monto: " + transaction.getAmount());
+            System.out.println("Descripción: " + transaction.getDescription().getDescription());
+            System.out.println("Fecha: " + transaction.getDate());
+            System.out.println("Estado: " + transaction.getStatus().getDescription());
+            System.out.println("------------------------------------------------------------");
+        }
+    }
 }

@@ -9,8 +9,7 @@ import org.example.models.Client;
 
 import java.util.Scanner;
 
-import static org.example.utils.ValidationUtils.getLoggedInClient;
-import static org.example.utils.ValidationUtils.uniqueCardVerifier;
+import static org.example.utils.ValidationUtils.*;
 
 public class Cards extends GenericList<Card> implements ICRUD {
 
@@ -25,12 +24,17 @@ public class Cards extends GenericList<Card> implements ICRUD {
     @Override
     public void create() {
         Card card = createCard();
-        Bank.getInstance().getLoggedInClient().getCards().add(card);
+        if(card != null){
+            Bank.getInstance().getLoggedInClient().getCards().add(card);
+            System.out.println("Tarjeta creada exitosamente.");
+        }
     }
 
     @Override
     public void read() {
-
+        Client client = Bank.getInstance().getLoggedInClient();
+        if(clientCheck(client)) return;
+        readCards(client);
     }
 
     @Override
@@ -52,12 +56,17 @@ public class Cards extends GenericList<Card> implements ICRUD {
         while(true){
             try{
                 if(cardType == null) {
-                    System.out.println("Ingrese el numero del tipo de tarjeta que desea crear:");
+                    System.out.println("Seleccione la opción de la tarjeta que desea crear:");
                     for (ECard type : ECard.values()) {
-                        System.out.println(type.getTypeId() + ". " + type.getDescription());
+                        System.out.println(type.getTypeId() + ") " + type.getDescription());
                     }
+                    System.out.println("0) Cancelar.");
                     int option = scanner.nextInt();
                     scanner.nextLine();
+                    if (option == 0) {
+                        System.out.println("Creación de tarjeta cancelada.");
+                        return null;
+                    }
                     if(option < 1 || option > ECard.values().length){
                         throw new InvalidFieldException ("Opción inválida. Intente nuevamente.");
                     }
@@ -75,4 +84,16 @@ public class Cards extends GenericList<Card> implements ICRUD {
             }
         }
     }
+
+    public static void readCards(Client client){
+        System.out.println("\n------------------------Tarjetas------------------------");
+        for(Card card : client.getCards().getList()){
+            System.out.println("Tipo de tarjeta: " + card.getType().getDescription());
+            System.out.println("Número de tarjeta: " + card.getNumber());
+            System.out.println("Código de seguridad: " + card.getCvv());
+            System.out.println("Fecha de vencimiento: " + card.getExpirationDate());
+            System.out.println("-----------------------------------\n");
+        }
+    }
+
 }

@@ -64,4 +64,12 @@ public class ValidationUtils {
         return true;
     }
 
+    public static boolean clientCheck(Client client) {
+        if (client == null) {
+            System.out.println("Cliente ingresado inválido.");
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -1,8 +1,11 @@
 package org.example.models;
 
 import org.example.enums.EAccountType;
+import org.example.models.lists.Transactions;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.example.utils.Mocks.getRandomAlias;
@@ -18,7 +21,6 @@ public class Account {
     private LocalDateTime createdAt;
     private String alias;
     private String cbu;
-
 
     public Account() {
     }
@@ -107,6 +109,23 @@ public class Account {
         this.cbu = cbu;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+        return accountId.equals(account.accountId) && alias.equals(account.alias) && cbu.equals(account.cbu);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accountId.hashCode();
+        result = 31 * result + alias.hashCode();
+        result = 31 * result + cbu.hashCode();
+        return result;
+    }
+
     public String generateUniqueAlias(){
         String alias;
         do{
@@ -116,15 +135,21 @@ public class Account {
         return alias;
     }
 
-    private static String generateRandomAlias(){
-        StringBuilder alias = new StringBuilder();
+    private static String generateRandomAlias() {
+        StringBuilder aliasBuilder = new StringBuilder();
+        Set<String> parts = new HashSet<>();
         for (int i = 0; i < 3; i++) {
+            String part;
+            do {
+                part = getRandomAlias();
+            } while (parts.contains(part));
+            parts.add(part);
             if (i > 0) {
-                alias.append(".");
+                aliasBuilder.append(".");
             }
-            alias.append(getRandomAlias());
+            aliasBuilder.append(part);
         }
-        return alias.toString();
+        return aliasBuilder.toString();
     }
 
     public String generateRandomCBU(){
@@ -145,5 +170,17 @@ public class Account {
         return cbu;
     }
 
-
+    @Override
+    public String toString() {
+        return  "\n------------------------Cuenta------------------------" +
+                "\nID de cuenta: " + accountId +
+                "\nTipo de cuenta: " + accountType.getDescription() +
+                "\nSaldo: " + balance +
+                "\nCosto de Mantenimiento: " + maintenanceFee +
+                "\nActivo: " + active +
+                "\nFecha de creación: " + createdAt +
+                "\nAlias: " + alias +
+                "\nCBU: " + cbu +
+                "\n----------------------------------------------------";
+    }
 }

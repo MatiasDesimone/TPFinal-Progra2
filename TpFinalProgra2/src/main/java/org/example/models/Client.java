@@ -125,4 +125,46 @@ public class Client extends Person {
     public Account getAccountByCBU(String cbu) {
         return accounts.getList().stream().filter(account -> account.getCbu().equals(cbu)).findFirst().orElse(null);
     }
+
+    public static Client getClientByID(String id) {
+        for (Client client : Bank.getInstance().getClients().getList()) {
+            if (client.getDni().equals(id)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    public static Client getClientByEmail(String email) {
+        for (Client client : Bank.getInstance().getClients().getList()) {
+            if (client.getEmail().equals(email)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    public static Client getClientByEmailAndPassword(String email, String password) {
+        for (Client client : Bank.getInstance().getClients().getList()) {
+            if (client.getEmail().equals(email) && client.getPassword().equals(password)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "\n------------------------Cliente------------------------" +
+                super.toString() +
+                address.toString() +
+                "\nID de cliente: " + clientId +
+                "\nDNI de cliente: " + dni +
+                "\nTelefono: " + phone +
+                "\nActivo: " + active +
+                accounts.toString() +
+                cards.toString() +
+                transactions.toString() +
+                "\n------------------------------------------------------";
+    }
 }

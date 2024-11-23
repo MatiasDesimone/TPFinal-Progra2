@@ -106,4 +106,17 @@ public class Transaction {
         }
     }
 
+    @Override
+    public String toString() {
+        return "\n------------------------Transacción------------------------" +
+                "\nID de transacción: " + transactionId +
+                "\nID de cuenta: " + accountId +
+                "\nCBU del propietario: " + ownerCBU +
+                "\nCBU del destinatario: " + recipientCBU +
+                "\nMonto: $" + amount +
+                "\nDescripción: " + description.getDescription() +
+                "\nFecha: " + date +
+                "\nEstado: " + status.getDescription() +
+                "\n------------------------------------------------------------";
+    }
 }
