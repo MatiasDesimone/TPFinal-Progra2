@@ -88,7 +88,7 @@ public class Address {
                 if (street == null) {
                     System.out.println("Ingrese la calle:");
                     street = scanner.nextLine();
-                    if (!validateField(street, streetRegex)) {
+                    if (!validateField(street, STREET_REGEX)) {
                         street = null;
                         throw new InvalidFieldException("Calle inválida. Recuerde que solo se permiten letras y números. Por favor, intente nuevamente.");
                     }
@@ -96,7 +96,7 @@ public class Address {
                     if(number == null) {
                         System.out.println("Ingrese el número:");
                         number = scanner.nextLine();
-                        if (!validateField(number, numberRegex)) {
+                        if (!validateField(number, NUMBER_REGEX)) {
                             number = null;
                             throw new InvalidFieldException("Número inválido. Recuerde que solo se permiten números. Por favor, intente nuevamente.");
                         }
@@ -105,36 +105,36 @@ public class Address {
                     if(city == null) {
                         System.out.println("Ingrese la ciudad:");
                         city = scanner.nextLine();
-                        if (!validateField(city, addressRegex)) {
+                        if (!validateField(city, ADDRESS_REGEX)) {
                             city = null;
                             throw new InvalidFieldException("Ciudad inválida. Recuerde que solo se permiten letras y números. Por favor, intente nuevamente.");
                         }
                     }
 
                     if(state == null) {
-                        System.out.println("Ingrese el estado:");
+                        System.out.println("Ingrese la provincia:");
                         state = scanner.nextLine();
-                        if (!validateField(state, addressRegex)) {
+                        if (!validateField(state, ADDRESS_REGEX)) {
                             state = null;
-                            throw new InvalidFieldException("Provincia inválida. Por favor, intente nuevamente.");
+                            throw new InvalidFieldException("Provincia inválida. Recuerde que solo se permiten letras y números. Por favor, intente nuevamente.");
                         }
                     }
 
                     if(country == null) {
                         System.out.println("Ingrese el país:");
                         country = scanner.nextLine();
-                        if (!validateField(country, addressRegex)) {
+                        if (!validateField(country, ADDRESS_REGEX)) {
                             country = null;
-                            throw new InvalidFieldException("País inválido. Por favor, intente nuevamente.");
+                            throw new InvalidFieldException("País inválido. Recuerde que solo se permiten letras y números. Por favor, intente nuevamente.");
                         }
                     }
 
                     if(postalCode == null) {
                         System.out.println("Ingrese el código postal:");
                         postalCode = scanner.nextLine();
-                        if (!validateField(postalCode, postalCodeRegex)) {
+                        if (!validateField(postalCode, POSTAL_CODE_REGEX)) {
                             postalCode = null;
-                            throw new InvalidFieldException("Código postal inválido. Por favor, intente nuevamente.");
+                            throw new InvalidFieldException("Código postal inválido. Recuerde que solo se permiten números. Por favor, intente nuevamente.");
                         }
                     }
 

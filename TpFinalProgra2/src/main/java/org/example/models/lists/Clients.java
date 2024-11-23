@@ -3,6 +3,7 @@ package org.example.models.lists;
 import org.example.exceptions.InvalidFieldException;
 import org.example.interfaces.ICRUD;
 import org.example.models.Address;
+import org.example.models.Bank;
 import org.example.models.Client;
 
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
     @Override
     public void create() {
         Client client = createClient();
-        add(client);
+        Bank.getInstance().getClients().add(client);
     }
 
     @Override
@@ -53,29 +54,29 @@ public class Clients extends GenericList<Client> implements ICRUD {
         while (true) {
             try {
                 if (name == null) {
-                    System.out.println("Ingrese el nombre del cliente:");
+                    System.out.println("Ingrese su nombre:");
                     name = scanner.nextLine();
-                    if (!validateField(name, nameOrLastNameRegex)) {
+                    if (!validateField(name, NAME_OR_LAST_NAME_REGEX)) {
                         name = null;
-                        throw new InvalidFieldException("Nombre invalido. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("Nombre invalido. Recuerde, solo se permiten letras y espacios.");
                     }
                 }
 
                 if (lastName == null) {
-                    System.out.println("Ingrese el apellido del cliente:");
+                    System.out.println("Ingrese su apellido:");
                     lastName = scanner.nextLine();
-                    if (!validateField(lastName, nameOrLastNameRegex)) {
+                    if (!validateField(lastName, NAME_OR_LAST_NAME_REGEX)) {
                         lastName = null;
-                        throw new InvalidFieldException("Apellido invalido. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("Apellido invalido. Recuerde, solo se permiten letras y espacios.");
                     }
                 }
 
                 if (email == null) {
-                    System.out.println("Ingrese el email del cliente:");
+                    System.out.println("Ingrese su email:");
                     email = scanner.nextLine();
-                    if (!validateField(email, emailRegex)) {
+                    if (!validateField(email, EMAIL_REGEX)) {
                         email = null;
-                        throw new InvalidFieldException("Email invalido. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("Email invalido. Recuerde, debe tener el formato 'email123@email.com'.");
                     }
                     if(!isEmailUnique(email, this.getList())) {
                         email = null;
@@ -84,20 +85,20 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 }
 
                 if(password == null) {
-                    System.out.println("Ingrese la contraseña del cliente:");
+                    System.out.println("Ingrese una contraseña:");
                     password = scanner.nextLine();
-                    if (!validateField(password, passwordRegex)) {
+                    if (!validateField(password, PASSWORD_REGEX)) {
                         password = null;
-                        throw new InvalidFieldException("Contraseña invalida. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("Contraseña invalida. Recuerde, debe tener al menos 12 caracteres, una mayúscula, una minúscula y un número.");
                     }
                 }
 
                 if (dni == null) {
-                    System.out.println("Ingrese el DNI del cliente:");
+                    System.out.println("Ingrese su DNI:");
                     dni = scanner.nextLine();
-                    if (!validateField(dni, dniRegex)) {
+                    if (!validateField(dni, DNI_REGEX)) {
                         dni = null;
-                        throw new InvalidFieldException("DNI invalido. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("DNI invalido. Recuerde, debe tener 8 dígitos.");
                     }
                     if(!isDniUnique(dni, this.getList())) {
                         dni = null;
@@ -106,11 +107,11 @@ public class Clients extends GenericList<Client> implements ICRUD {
                 }
 
                 if (phone == null) {
-                    System.out.println("Ingrese el telefono del cliente:");
+                    System.out.println("Ingrese su telefono:");
                     phone = scanner.nextLine();
-                    if (!validateField(phone, phoneRegex)) {
+                    if (!validateField(phone, PHONE_REGEX)) {
                         phone = null;
-                        throw new InvalidFieldException("Telefono invalido. Por favor, intente nuevamente.");
+                        throw new InvalidFieldException("Telefono invalido. Recuerde, debe tener 10 dígitos.");
                     }
                     if(!isPhoneUnique(phone, this.getList())) {
                         phone = null;
