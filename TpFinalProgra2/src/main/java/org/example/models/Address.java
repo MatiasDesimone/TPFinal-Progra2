@@ -82,8 +82,10 @@ public class Address {
         String state = null;
         String country = null;
         String postalCode = null;
+        int aux = 0;
 
         while (true) {
+            if(breakPoint(aux)) return null;
             try {
                 if (street == null) {
                     System.out.println("Ingrese la calle:");
@@ -142,6 +144,8 @@ public class Address {
                 }
             } catch (InvalidFieldException e) {
                 System.out.println(e.getMessage());
+            }finally {
+                aux++;
             }
         }
     }

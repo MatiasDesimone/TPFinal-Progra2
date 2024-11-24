@@ -5,6 +5,8 @@ import org.example.models.lists.Accounts;
 import org.example.models.lists.Cards;
 import org.example.models.lists.Transactions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Client extends Person {
@@ -16,6 +18,7 @@ public class Client extends Person {
     private Accounts accounts;
     private Cards cards;
     private Transactions transactions;
+    private List<String> incomingTransactionsIDs;
 
     public Client() {
     }
@@ -30,6 +33,7 @@ public class Client extends Person {
         this.accounts = new Accounts();
         this.cards = new Cards();
         this.transactions = new Transactions();
+        this.incomingTransactionsIDs = new ArrayList<>();
     }
 
     public String getClientId() {
@@ -96,6 +100,14 @@ public class Client extends Person {
         this.transactions = transactions;
     }
 
+    public List<String> getReceivedTransfersIDs() {
+        return incomingTransactionsIDs;
+    }
+
+    public void setReceivedTransfersIDs(List<String> receivedTransfersIDs) {
+        this.incomingTransactionsIDs = receivedTransfersIDs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,11 +127,17 @@ public class Client extends Person {
     }
 
     public Account getAccountByType(EAccountType accountType) {
-        return accounts.getList().stream().filter(account -> account.getAccountType() == accountType).findFirst().orElse(null);
+        Client loggedClient = Bank.getInstance().getLoggedInClient();
+        return loggedClient.getAccounts().getList().stream()
+                .filter(account -> account.getAccountType() == accountType)
+                .findFirst()
+                .orElse(null);
     }
 
     public Account getAccountByAlias(String alias) {
-        return accounts.getList().stream().filter(account -> account.getAlias().equals(alias)).findFirst().orElse(null);
+        return accounts.getList().stream()
+                .filter(account -> account.getAlias().equals(alias))
+                .findFirst().orElse(null);
     }
 
     public Account getAccountByCBU(String cbu) {
@@ -128,7 +146,7 @@ public class Client extends Person {
 
     public static Client getClientByID(String id) {
         for (Client client : Bank.getInstance().getClients().getList()) {
-            if (client.getDni().equals(id)) {
+            if (client.getClientId().equals(id)) {
                 return client;
             }
         }
@@ -164,7 +182,6 @@ public class Client extends Person {
                 "\nActivo: " + active +
                 accounts.toString() +
                 cards.toString() +
-                transactions.toString() +
                 "\n------------------------------------------------------";
     }
 }

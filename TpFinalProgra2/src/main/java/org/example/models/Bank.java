@@ -3,8 +3,7 @@ package org.example.models;
 import org.example.models.lists.Admins;
 import org.example.models.lists.Clients;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.example.models.Admin.getAdminByEmailAndPassword;
 import static org.example.models.Client.getClientByEmailAndPassword;
@@ -22,6 +21,7 @@ public class Bank {
     private Set<String> existingCardNumbers = new HashSet<>();
     private Set<String> existingAlias = new HashSet<>();
     private Set<String> existingCBU = new HashSet<>();
+    private Map<String, List<Transaction>> deletedClientTransactions = new HashMap<>();
 
 
     private Bank() {
@@ -38,6 +38,14 @@ public class Bank {
             instance = new Bank();
         }
         return instance;
+    }
+
+    public void setDeletedClientTransactions(Map<String, List<Transaction>> deletedClientTransactions) {
+        this.deletedClientTransactions = deletedClientTransactions;
+    }
+
+    public Map<String, List<Transaction>> getDeletedClientTransactions() {
+        return deletedClientTransactions;
     }
 
     public String getName() {

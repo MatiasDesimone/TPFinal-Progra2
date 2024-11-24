@@ -40,12 +40,12 @@ public class Accounts extends GenericList<Account> implements ICRUD {
 
     @Override
     public void update() {
-
+        //todo: implementar aumentar saldo.
     }
 
     @Override
     public void delete() {
-
+        //todo: dar de baja una cuenta.
     }
 
     private Account createAccount() {
@@ -54,8 +54,10 @@ public class Accounts extends GenericList<Account> implements ICRUD {
         String clientId = loggedClient.getClientId();
         EAccountType accountType = null;
         double balance = 0;
+        int aux = 0;
 
         while(true){
+            if (breakPoint(aux)) return null;
             try{
                 if(accountType == null) {
                     System.out.println("Ingrese el numero del tipo de cuenta que desea crear:");
@@ -94,6 +96,8 @@ public class Accounts extends GenericList<Account> implements ICRUD {
 
             }catch(InvalidFieldException e){
                 System.out.println(e.getMessage());
+            }finally {
+                aux++;
             }
         }
     }

@@ -33,24 +33,24 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
             Bank.getInstance().getLoggedInClient().getTransactions().add(transaction);
             System.out.println("Transacción realizada exitosamente.");
         }
-
     }
 
     @Override
     public void read() {
         Client client = Bank.getInstance().getLoggedInClient();
         if(clientCheck(client)) return;
-        readTransactions(client);
+        readOutTransactions(client);
+        readInTransactions(client);
     }
 
     @Override
     public void update() {
-
+        //No supimos que podíamos updatear de las transacciones...
     }
 
     @Override
     public void delete() {
-
+        //Tampoco está bueno borrar transacciones... Mejor guardarlas por si acaso.
     }
 
     private Transaction createTransaction(){
@@ -63,8 +63,10 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
         double amount = 0;
         ETransactionDescription description = null;
         EStatus status = null;
+        int aux = 0;
 
         while (true) {
+            if (breakPoint(aux)) return null;
             try {
                 Account accountOwner = null;
                 Account accountRecipient = null;
@@ -73,8 +75,13 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                     for(Account account : loggedClient.getAccounts().getList()){
                         System.out.println(account.getAccountType().getTypeId()+") " + account.getAccountType().getDescription());
                     }
+                    System.out.println("0) Cancelar.");
                     int option = scanner.nextInt();
                     scanner.nextLine();
+                    if (option == 0) {
+                        System.out.println("Creación de tarjeta cancelada.");
+                        return null;
+                    }
                     if(option < 1 || option > EAccountType.values().length){
                         throw new InvalidFieldException ("Opción inválida. Intente nuevamente.");
                     }
@@ -160,6 +167,8 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                         }
                         status = EStatus.APPROVED;
                         System.out.println("La transacción fue aprobada.");
+                    }else {
+                        System.out.println("La transacción fue aprobada.");
                     }
                 }
 
@@ -167,12 +176,14 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
 
             } catch (InvalidFieldException | NotFoundException | InterruptedException e) {
                 System.out.println(e.getMessage());
+            }finally {
+                aux++;
             }
         }
     }
 
-    public static void readTransactions(Client client){
-        System.out.println("\n------------------------Transacciones------------------------");
+    public static void readOutTransactions(Client client){
+        System.out.println("\n------------------------Transacciones salientes------------------------");
         for(Transaction transaction : client.getTransactions().getList()){
             System.out.println("ID de transacción: " + transaction.getTransactionId());
             System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
@@ -184,4 +195,23 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
             System.out.println("------------------------------------------------------------");
         }
     }
+
+    public static void readInTransactions(Client client){
+        System.out.println("\n------------------------Transacciones entrantes------------------------");
+        for(Client client1 : Bank.getInstance().getClients().getList()){
+            for(Transaction transaction : client1.getTransactions().getList()){
+                if(transaction.getRecipientCBU().equals(client.getAccountByType(EAccountType.CUENTA_CORRIENTE).getCbu())){
+                    System.out.println("ID de transacción: " + transaction.getTransactionId());
+                    System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
+                    System.out.println("CBU del destinatario: " + transaction.getRecipientCBU());
+                    System.out.println("Monto: " + transaction.getAmount());
+                    System.out.println("Descripción: " + transaction.getDescription().getDescription());
+                    System.out.println("Fecha: " + transaction.getDate());
+                    System.out.println("Estado: " + transaction.getStatus().getDescription());
+                    System.out.println("------------------------------------------------------------");
+                }
+            }
+        }
+    }
+
 }
