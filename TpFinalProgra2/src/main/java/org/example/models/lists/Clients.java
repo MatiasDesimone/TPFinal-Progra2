@@ -1,5 +1,6 @@
 package org.example.models.lists;
 
+import org.example.exceptions.AlreadyRegisteredException;
 import org.example.exceptions.InvalidFieldException;
 import org.example.interfaces.ICRUD;
 import org.example.models.*;
@@ -32,41 +33,51 @@ public class Clients extends GenericList<Client> implements ICRUD {
         Scanner scanner = new Scanner(System.in);
         Client client = Bank.getInstance().getLoggedInClient();
         if (clientCheck(client)) return;
-        clientReadMenu();
-        int option = scanner.nextInt();
-        scanner.nextLine();
-        switch (option) {
-            case 1:
-                readClient(client);
-                break;
-            case 2:
-                Accounts.readAccount(client);
-                break;
-            case 3:
-                Cards.readCards(client);
-                break;
-            case 4:
-                Transactions.readTransactions(client);
-                break;
-            case 5:
-                readClientTotal(client);
-                break;
-            case 0:
-                System.out.println("Operación cancelada. Saliendo...");
-                break;
-            default:
-                System.out.println("Opción inválida. Por favor, intente nuevamente.");
-        }
+        int option;
+        do {
+            clientReadMenu();
+            option = scanner.nextInt();
+            scanner.nextLine();
+            switch (option) {
+                case 1:
+                    readClient(client);
+                    break;
+                case 2:
+                    Accounts.readAccount(client);
+                    break;
+                case 3:
+                    Cards.readCards(client);
+                    break;
+                case 4:
+                    readClientTotal(client);
+                    break;
+                case 5:
+                    Transactions.readOutTransactions(client);
+                    break;
+                case 6:
+                    Transactions.readInTransactions(client);
+                    break;
+                case 7:
+                    Transactions allTransactions = new Transactions();
+                    allTransactions.read();
+                    break;
+                case 0:
+                    System.out.println("Operación cancelada. Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción inválida. Por favor, intente nuevamente.");
+            }
+        } while (option != 0);
     }
 
     @Override
     public void update() {
-
+        //todo: menu para elegir que campo actualizar.
     }
 
     @Override
     public void delete() {
-
+        //todo: menu para elegir que campo dar de baja.
     }
 
     private Client createClient() {
@@ -78,8 +89,10 @@ public class Clients extends GenericList<Client> implements ICRUD {
         String dni = null;
         String phone = null;
         Address address = null;
+        int aux = 0;
 
         while (true) {
+            if (breakPoint(aux)) return null;
             try {
                 if (name == null) {
                     System.out.println("Ingrese su nombre:");
@@ -108,7 +121,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                     }
                     if(!isEmailUnique(email, this.getList())) {
                         email = null;
-                        throw new InvalidFieldException("El email ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
+                        throw new AlreadyRegisteredException("El email ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
                     }
                 }
 
@@ -130,7 +143,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
                     }
                     if(!isDniUnique(dni, this.getList())) {
                         dni = null;
-                        throw new InvalidFieldException("El DNI ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
+                        throw new AlreadyRegisteredException("El DNI ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
                     }
                 }
 
@@ -143,18 +156,24 @@ public class Clients extends GenericList<Client> implements ICRUD {
                     }
                     if(!isPhoneUnique(phone, this.getList())) {
                         phone = null;
-                        throw new InvalidFieldException("El telefono ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
+                        throw new AlreadyRegisteredException("El telefono ingresado ya se encuentra registrado. Por favor, intente nuevamente.");
                     }
                 }
 
                 if (address == null) {
                     address = new Address().createAddress();
+                    if(address == null) {
+                        throw new InvalidFieldException("Dirección inválida. Por favor, intente nuevamente.");
+                    }
                 }
 
+                System.out.println("Usuario creado exitosamente.");
                 return new Client(name, lastName, email, password, dni, address, phone);
 
-            } catch (InvalidFieldException e) {
+            } catch (InvalidFieldException | AlreadyRegisteredException e) {
                 System.out.println(e.getMessage());
+            }finally {
+                aux++;
             }
         }
     }
@@ -173,7 +192,6 @@ public class Clients extends GenericList<Client> implements ICRUD {
         readClient(client);
         Accounts.readAccount(client);
         Cards.readCards(client);
-        Transactions.readTransactions(client);
     }
 
     private static void clientReadMenu() {
@@ -181,8 +199,11 @@ public class Clients extends GenericList<Client> implements ICRUD {
         System.out.println("1) Datos de usuario.");
         System.out.println("2) Datos de cuentas.");
         System.out.println("3) Datos de tarjetas.");
-        System.out.println("4) Datos de transacciones.");
-        System.out.println("5) Datos completos.");
+        System.out.println("4) Todos los anteriores.");
+        System.out.println("5) Datos de transacciones enviadas.");
+        System.out.println("6) Datos de transacciones recibidas.");
+        System.out.println("7) Datos de todas mis transacciones.");
         System.out.println("0) Cancelar y salir.");
     }
+
 }

@@ -1,7 +1,5 @@
 package org.example.models;
 
-import org.example.interfaces.IShow;
-
 import java.util.UUID;
 
 public class Admin extends Person {
