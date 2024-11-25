@@ -46,11 +46,11 @@ public class Cards extends GenericList<Card> implements ICRUD {
     @Override
     public void delete() {
         Scanner scanner = new Scanner(System.in);
+        Client loggedClient = Bank.getInstance().getLoggedInClient();
         int aux = 0;
         while (true) {
             if (breakPoint(aux)) return;
             try {
-                Client loggedClient = getLoggedInClient();
                 readCards(loggedClient);
                 System.out.print("Ingrese el número de la tarjeta que desea dar de baja: ");
                 String cardNumber = scanner.nextLine();
@@ -119,14 +119,21 @@ public class Cards extends GenericList<Card> implements ICRUD {
     }
 
     public static void readCards(Client client){
-        System.out.println("\n------------------------Tarjetas------------------------");
-        for(Card card : client.getCards().getList()){
-            System.out.println("Tipo de tarjeta: " + card.getType().getDescription());
-            System.out.println("Número de tarjeta: " + card.getNumber());
-            System.out.println("Código de seguridad: " + card.getCvv());
-            System.out.println("Fecha de vencimiento: " + card.getExpirationDate());
-            System.out.println("-----------------------------------\n");
+        System.out.println("\n-------------------------------Tarjetas--------------------------------");
+        if(client.getCards().getList().isEmpty()){
+            System.out.println("\nNo posee tarjetas.\n\n");
+            return;
         }
+            for(Card card : client.getCards().getList()) {
+                if(card.isActive()){
+                    System.out.println("Tipo de tarjeta: " + card.getType().getDescription());
+                    System.out.println("Número de tarjeta: " + card.getNumber());
+                    System.out.println("Código de seguridad: " + card.getCvv());
+                    System.out.println("Fecha de vencimiento: " + card.getExpirationDate().getMonth() + "/" + card.getExpirationDate().getYear());
+                    System.out.println("-----------------------------------------------------------------------\n");
+                }
+            }
+
     }
 
     public static Card getCardByNumber(String cardNumber) {

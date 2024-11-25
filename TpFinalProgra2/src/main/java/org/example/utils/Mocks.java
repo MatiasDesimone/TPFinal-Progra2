@@ -1,5 +1,8 @@
 package org.example.utils;
 
+import org.example.models.Address;
+import org.example.models.Card;
+
 public class Mocks {
 
     public static final String[] ALIAS = {   // 8,887,600 combinaciones distintas
@@ -46,4 +49,18 @@ public class Mocks {
     public static String getRandomAlias() {
         return ALIAS[(int) (Math.random() * ALIAS.length)];
     }
+
+
+
+    public static Address generateRandomAddress() {
+        String street = getRandomAlias();
+        String number = String.valueOf((int) (Math.random() * 10000));
+        String city = getRandomAlias();
+        String state = getRandomAlias();
+        String country = getRandomAlias();
+        String postalCode = String.valueOf((int) (Math.random() * 10000));
+        return new Address(street, number, city, state, country, postalCode);
+    }
+
+
 }

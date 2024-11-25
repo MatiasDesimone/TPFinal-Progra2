@@ -139,11 +139,11 @@ public class Card {
 
     @Override
     public String toString() {
-        return  "\n------------------------Tarjeta------------------------" +
+        return  "\n---------------------------Tarjeta---------------------------" +
                 "\nNúmero de tarjeta: " + maskCardNumber() +
-                "\nFecha de vencimiento: " + expirationDate +
+                "\nFecha de vencimiento: " + expirationDate.getMonth() + "/" +  expirationDate.getYear() +
                 "\nTipo de tarjeta: " + type.getDescription() +
                 "\nActiva: " + active +
-                "\n------------------------------------------------------";
+                "\n------------------------------------------------------------";
     }
 }

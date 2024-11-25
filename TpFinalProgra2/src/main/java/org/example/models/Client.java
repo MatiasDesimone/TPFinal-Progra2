@@ -18,7 +18,6 @@ public class Client extends Person {
     private Accounts accounts;
     private Cards cards;
     private Transactions transactions;
-    private List<String> incomingTransactionsIDs;
 
     public Client() {
     }
@@ -33,7 +32,6 @@ public class Client extends Person {
         this.accounts = new Accounts();
         this.cards = new Cards();
         this.transactions = new Transactions();
-        this.incomingTransactionsIDs = new ArrayList<>();
     }
 
     public String getClientId() {
@@ -100,14 +98,6 @@ public class Client extends Person {
         this.transactions = transactions;
     }
 
-    public List<String> getReceivedTransfersIDs() {
-        return incomingTransactionsIDs;
-    }
-
-    public void setReceivedTransfersIDs(List<String> receivedTransfersIDs) {
-        this.incomingTransactionsIDs = receivedTransfersIDs;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -163,17 +153,15 @@ public class Client extends Person {
     }
 
     public static Client getClientByEmailAndPassword(String email, String password) {
-        for (Client client : Bank.getInstance().getClients().getList()) {
-            if (client.getEmail().equals(email) && client.getPassword().equals(password)) {
-                return client;
-            }
-        }
-        return null;
+        return Bank.getInstance().getClients().getList().stream()
+                .filter(client -> client.getEmail().equals(email) && client.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public String toString() {
-        return "\n------------------------Cliente------------------------" +
+        return "\n---------------------------Cliente---------------------------" +
                 super.toString() +
                 address.toString() +
                 "\nID de cliente: " + clientId +
@@ -182,6 +170,6 @@ public class Client extends Person {
                 "\nActivo: " + active +
                 accounts.toString() +
                 cards.toString() +
-                "\n------------------------------------------------------";
+                "\n------------------------------------------------------------";
     }
 }

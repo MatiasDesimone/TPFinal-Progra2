@@ -31,19 +31,17 @@ public class Admin extends Person {
     }
 
     public static Admin getAdminByEmailAndPassword(String email, String password) {
-        for (Admin admin : Bank.getInstance().getAdmins().getList()) {
-            if (admin.getEmail().equals(email) && admin.getPassword().equals(password)) {
-                return admin;
-            }
-        }
-        return null;
+        return Bank.getInstance().getAdmins().getList().stream()
+                .filter(admin -> admin.getEmail().equals(email) && admin.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public String toString() {
         return "\n------------------------Administrador------------------------" +
                 super.toString() +
-                "ID de Administrador: " + adminId +
+                "\nID de Administrador: " + adminId +
                 "\n------------------------------------------------------------";
     }
 }

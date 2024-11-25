@@ -5,6 +5,7 @@ import org.example.exceptions.NotFoundException;
 import org.example.interfaces.ICRUD;
 import org.example.models.*;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,48 +36,53 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         Admin admin = Bank.getInstance().getLoggedAdmin();
         if (adminCheck(admin)) return;
         int option;
-        do {
+        while (true) {
             adminReadMenu();
-            option = scanner.nextInt();
-            scanner.nextLine();
-            switch (option) {
-                case 1:
-                    System.out.println(admin.toString());
-                    break;
-                case 2:
-                    System.out.print("Ingrese el ID del usuario: ");
-                    String clientId = scanner.nextLine();
-                    if(clientId.isEmpty()){
-                        System.out.println("ID inválido. Saliendo...");
+            try {
+                option = scanner.nextInt();
+                scanner.nextLine();
+                switch (option) {
+                    case 1:
+                        System.out.println(admin.toString());
                         break;
-                    }
-                    readClientByID(clientId);
-                    break;
-                case 3:
-                    readAllClients();
-                    break;
-                case 4:
-                    readAllAccounts();
-                    break;
-                case 5:
-                    readAllCards();
-                    break;
-                case 6:
-                    getClientTransactions();
-                    break;
-                case 7:
-                    getDeletedClientTransactions();
-                    break;
-                case 8:
-                    readAllTransactions();
-                    break;
-                case 0:
-                    System.out.println("Operación cancelada. Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, intente nuevamente.");
+                    case 2:
+                        System.out.print("Ingrese el ID del usuario: ");
+                        String clientId = scanner.nextLine();
+                        if(clientId.isEmpty()){
+                            System.out.println("ID inválido. Saliendo...");
+                            break;
+                        }
+                        readClientByID(clientId);
+                        break;
+                    case 3:
+                        readAllClients();
+                        break;
+                    case 4:
+                        readAllAccounts();
+                        break;
+                    case 5:
+                        readAllCards();
+                        break;
+                    case 6:
+                        getClientTransactions();
+                        break;
+                    case 7:
+                        getDeletedClientTransactions();
+                        break;
+                    case 8:
+                        readAllTransactions();
+                        break;
+                    case 0:
+                        System.out.println("Operación cancelada. Saliendo...");
+                        return;
+                    default:
+                        System.out.println("Opción inválida. Por favor, intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                scanner.nextLine();
             }
-        } while (option != 0);
+        }
     }
 
     @Override
@@ -85,30 +91,35 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         Admin admin = Bank.getInstance().getLoggedAdmin();
         if (adminCheck(admin)) return;
         int mainOption;
-        do {
+        while (true) {
             adminUpdateMenu();
-            mainOption = scanner.nextInt();
-            scanner.nextLine();
-            switch (mainOption) {
-                case 1:
-                    updatePersonalData();
-                    break;
-                case 2:
-                    updateClientStatus();
-                    break;
-                case 3:
-                    updateAccountStatus();
-                    break;
-                case 4:
-                    updateCardStatus();
-                    break;
-                case 0:
-                    System.out.println("Operación cancelada. Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, intente nuevamente.");
+            try {
+                mainOption = scanner.nextInt();
+                scanner.nextLine();
+                switch (mainOption) {
+                    case 1:
+                        updatePersonalData();
+                        break;
+                    case 2:
+                        updateClientStatus();
+                        break;
+                    case 3:
+                        updateAccountStatus();
+                        break;
+                    case 4:
+                        updateCardStatus();
+                        break;
+                    case 0:
+                        System.out.println("Operación cancelada. Saliendo...");
+                        return;
+                    default:
+                        System.out.println("Opción inválida. Por favor, intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                scanner.nextLine();
             }
-        } while (mainOption != 0);
+        }
     }
 
     @Override
@@ -117,31 +128,35 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         Admin admin = Bank.getInstance().getLoggedAdmin();
         if (adminCheck(admin)) return;
         int option;
-        do {
+        while (true) {
             deleteMenu();
-            option = scanner.nextInt();
-            scanner.nextLine();
-            switch (option) {
-                case 1:
-                    System.out.println("¡No puedes borrarte a ti mismo! ¿Quién hará el trabajo sucio?");
-                    option = 0;
-                    break;
-                case 2:
-                    deleteClient();
-                    break;
-                case 3:
-                    deleteAccount();
-                    break;
-                case 4:
-                    deleteCard();
-                    break;
-                case 0:
-                    System.out.println("Operación cancelada. Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, intente nuevamente.");
+            try {
+                option = scanner.nextInt();
+                scanner.nextLine();
+                switch (option) {
+                    case 1:
+                        System.out.println("¡No puedes borrarte a ti mismo! ¿Quién hará el trabajo sucio?");
+                        break;
+                    case 2:
+                        deleteClient();
+                        break;
+                    case 3:
+                        deleteAccount();
+                        break;
+                    case 4:
+                        deleteCard();
+                        break;
+                    case 0:
+                        System.out.println("Operación cancelada. Saliendo...");
+                        return;
+                    default:
+                        System.out.println("Opción inválida. Por favor, intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                scanner.nextLine();
             }
-        } while (option != 0);
+        }
     }
 
     private static void deleteMenu() {
@@ -163,7 +178,11 @@ public class Admins extends GenericList<Admin> implements ICRUD {
     }
 
     private static void readAllClients() {
-        System.out.println("Lista de todos los clientes del banco con sus respectivos datos: )");
+        System.out.println("Lista de todos los clientes del banco con sus respectivos datos: ");
+        if(Bank.getInstance().getClients().getList().isEmpty()){
+            System.out.println("\nNo hay clientes registrados.\n\n");
+            return;
+        }
         for (Client client : Bank.getInstance().getClients().getList()) {
             readClientTotal(client);
         }
@@ -171,6 +190,10 @@ public class Admins extends GenericList<Admin> implements ICRUD {
 
     private static void readAllAccounts() {
         System.out.println("Lista de todas las cuentas del banco con sus respectivos datos: ");
+        if(Bank.getInstance().getClients().getList().isEmpty()){
+            System.out.println("\nNo hay cuentas registradas.\n\n");
+            return;
+        }
         for (Client client : Bank.getInstance().getClients().getList()) {
             System.out.println("\n- Cuentas del cliente: " + client.getClientId());
             for (Account account : client.getAccounts().getList()) {
@@ -181,6 +204,10 @@ public class Admins extends GenericList<Admin> implements ICRUD {
 
     private static void readAllTransactions() {
         System.out.println("Lista de todas las transacciones del banco con sus respectivos datos: ");
+        if(Bank.getInstance().getClients().getList().isEmpty()){
+            System.out.println("\nNo hay transacciones registradas.\n\n");
+            return;
+        }
         for (Client client : Bank.getInstance().getClients().getList()) {
             System.out.println("\n- Transacciones del cliente: " + client.getClientId());
             for (Transaction transaction : client.getTransactions().getList()) {
@@ -191,6 +218,10 @@ public class Admins extends GenericList<Admin> implements ICRUD {
 
     private static void readAllCards() {
         System.out.println("Lista de todas las tarjetas del banco con sus respectivos datos: ");
+        if(Bank.getInstance().getClients().getList().isEmpty()){
+            System.out.println("\nNo hay tarjetas registradas.\n\n");
+            return;
+        }
         for (Client client : Bank.getInstance().getClients().getList()) {
             System.out.println("\n- Tarjetas del cliente: " + client.getClientId());
             for (Card card : client.getCards().getList()) {
@@ -224,15 +255,14 @@ public class Admins extends GenericList<Admin> implements ICRUD {
                 if (!validateField(newName, NAME_OR_LAST_NAME_REGEX)) {
                     throw new InvalidFieldException("Nombre inválido. Por favor, intente nuevamente.");
                 }
-                System.out.println("Nombre del administrador actualizado exitosamente.");
-                System.out.println("Está seguro que desea cambiar el nombre del administrador a " + newName + "?");
+                System.out.println("Está seguro que desea cambiar su nombre a " + newName + "?");
                 System.out.println("1) Sí.");
                 System.out.println("2) No.");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 if (option == 1) {
                     admin.setName(newName);
-                    System.out.println("Nombre del administrador actualizado exitosamente.");
+                    System.out.println("Nombre actualizado exitosamente.");
                     break;
                 } else {
                     System.out.println("Operación cancelada.");
@@ -253,20 +283,19 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         while (true) {
             if (breakPoint(aux)) return;
             try {
-                System.out.print("Ingrese el nuevo apellido del administrador: ");
+                System.out.print("Ingrese el nuevo apellido: ");
                 String newLastName = scanner.nextLine();
                 if (!validateField(newLastName, NAME_OR_LAST_NAME_REGEX)) {
                     throw new InvalidFieldException("Apellido inválido. Por favor, intente nuevamente.");
                 }
-                System.out.println("Apellido del administrador actualizado exitosamente.");
-                System.out.println("Está seguro que desea cambiar el apellido del administrador a " + newLastName + "?");
+                System.out.println("Está seguro que desea cambiar su apellido a " + newLastName + "?");
                 System.out.println("1) Sí.");
                 System.out.println("2) No.");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 if (option == 1) {
                     admin.setLastName(newLastName);
-                    System.out.println("Apellido del administrador actualizado exitosamente.");
+                    System.out.println("Apellido actualizado exitosamente.");
                     break;
                 } else {
                     System.out.println("Operación cancelada.");
@@ -287,20 +316,19 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         while (true) {
             if (breakPoint(aux)) return;
             try {
-                System.out.print("Ingrese el nuevo email del administrador: ");
+                System.out.print("Ingrese el nuevo email: ");
                 String newEmail = scanner.nextLine();
                 if (!validateField(newEmail, EMAIL_REGEX)) {
                     throw new InvalidFieldException("Email inválido. Por favor, intente nuevamente.");
                 }
-                System.out.println("Email del administrador actualizado exitosamente.");
-                System.out.println("Está seguro que desea cambiar el email del administrador a " + newEmail + "?");
+                System.out.println("Está seguro que desea cambiar su email a " + newEmail + "?");
                 System.out.println("1) Sí.");
                 System.out.println("2) No.");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 if (option == 1) {
                     admin.setEmail(newEmail);
-                    System.out.println("Email del administrador actualizado exitosamente.");
+                    System.out.println("Email actualizado exitosamente.");
                     break;
                 } else {
                     System.out.println("Operación cancelada.");
@@ -321,20 +349,19 @@ public class Admins extends GenericList<Admin> implements ICRUD {
         while (true) {
             if (breakPoint(aux)) return;
             try {
-                System.out.print("Ingrese la nueva contraseña del administrador: ");
+                System.out.print("Ingrese la nueva contraseña: ");
                 String newPassword = scanner.nextLine();
                 if (!validateField(newPassword, PASSWORD_REGEX)) {
                     throw new InvalidFieldException("Contraseña inválida. Por favor, intente nuevamente.");
                 }
-                System.out.println("Contraseña del administrador actualizada exitosamente.");
-                System.out.println("Está seguro que desea cambiar la contraseña del administrador a " + newPassword + "?");
+                System.out.println("Está seguro que desea cambiar su contraseña a " + newPassword + "?");
                 System.out.println("1) Sí.");
                 System.out.println("2) No.");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 if (option == 1) {
                     admin.setPassword(newPassword);
-                    System.out.println("Contraseña del administrador actualizada exitosamente.");
+                    System.out.println("Contraseña actualizada exitosamente.");
                     break;
                 } else {
                     System.out.println("Operación cancelada.");
@@ -369,31 +396,37 @@ public class Admins extends GenericList<Admin> implements ICRUD {
     private void updatePersonalData() {
         Scanner scanner = new Scanner(System.in);
         Admin admin = Bank.getInstance().getLoggedAdmin();
+        if(adminCheck(admin)) return;
         int option;
-        do {
+        while (true) {
             adminPersonalUpdateMenu();
-            option = scanner.nextInt();
-            scanner.nextLine();
-            switch (option) {
-                case 1:
-                    updateAdminName();
-                    break;
-                case 2:
-                    updateAdminLastName();
-                    break;
-                case 3:
-                    updateAdminEmail();
-                    break;
-                case 4:
-                    updateAdminPassword();
-                    break;
-                case 0:
-                    System.out.println("Operación cancelada. Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida. Por favor, intente nuevamente.");
+            try {
+                option = scanner.nextInt();
+                scanner.nextLine();
+                switch (option) {
+                    case 1:
+                        updateAdminName();
+                        break;
+                    case 2:
+                        updateAdminLastName();
+                        break;
+                    case 3:
+                        updateAdminEmail();
+                        break;
+                    case 4:
+                        updateAdminPassword();
+                        break;
+                    case 0:
+                        System.out.println("Operación cancelada. Saliendo...");
+                        return;
+                    default:
+                        System.out.println("Opción inválida. Por favor, intente nuevamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                scanner.nextLine();
             }
-        } while (option != 0);
+        }
     }
 
     private void updateClientStatus() {

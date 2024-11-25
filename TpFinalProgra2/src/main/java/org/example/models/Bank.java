@@ -141,24 +141,42 @@ public class Bank {
     }
 
 
-    public boolean login(String email, String password) {
+    public int login(String email, String password) {
         Admin admin = getAdminByEmailAndPassword(email, password);
         if (admin != null) {
-            Bank.getInstance().setLoggedAdmin(admin);
+            instance.loggedAdmin = admin;
+            loggedAdmin = instance.loggedAdmin;
             System.out.println("Administrador logueado exitosamente.");
-            return true;
+            return 1;
         }
 
         Client client = getClientByEmailAndPassword(email, password);
         if (client != null) {
-            Bank.getInstance().setLoggedInClient(client);
+            if (!client.isActive()) {
+                System.out.println("El cliente no está autorizado para loguearse. Por favor, acerquese al banco.");
+                return 0;
+            }
+            instance.loggedInClient = client;
+            loggedInClient = instance.loggedInClient;
             System.out.println("Cliente logueado exitosamente.");
-            return true;
+            return 2;
         } else {
             System.out.println("Usuario no encontrado o contraseña incorrecta.");
         }
-        return false;
+        return 0;
     }
 
-
+    public void logout() {
+        if (this.loggedInClient != null) {
+            this.loggedInClient = null;
+            instance.loggedInClient = null;
+            System.out.println("Cliente deslogueado exitosamente.");
+        } else if (loggedAdmin != null) {
+            this.loggedAdmin = null;
+            instance.loggedAdmin = null;
+            System.out.println("Administrador deslogueado exitosamente.");
+        } else {
+            System.out.println("No hay ningún usuario logueado.");
+        }
+    }
 }

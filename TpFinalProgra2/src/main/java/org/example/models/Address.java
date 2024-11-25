@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import static org.example.utils.ValidationUtils.*;
 
-public class Address {
+public class Address implements Comparable<Address> {
     private String street;
     private String number;
     private String city;
@@ -74,6 +74,26 @@ public class Address {
         this.postalCode = postalCode;
     }
 
+    @Override
+    public int compareTo(Address other) {
+        int result = this.street.compareTo(other.street);
+        if (result != 0) return result;
+
+        result = this.number.compareTo(other.number);
+        if (result != 0) return result;
+
+        result = this.city.compareTo(other.city);
+        if (result != 0) return result;
+
+        result = this.state.compareTo(other.state);
+        if (result != 0) return result;
+
+        result = this.country.compareTo(other.country);
+        if (result != 0) return result;
+
+        return this.postalCode.compareTo(other.postalCode);
+    }
+
     public Address createAddress() {
         Scanner scanner = new Scanner(System.in);
         String street = null;
@@ -88,7 +108,8 @@ public class Address {
             if(breakPoint(aux)) return null;
             try {
                 if (street == null) {
-                    System.out.println("Ingrese la calle:");
+                    System.out.println("Ingrese el nombre de la calle:");
+                    System.out.println("Ejemplo: Av. Siempre Viva");
                     street = scanner.nextLine();
                     if (!validateField(street, STREET_REGEX)) {
                         street = null;
@@ -97,6 +118,7 @@ public class Address {
 
                     if(number == null) {
                         System.out.println("Ingrese el número:");
+                        System.out.println("Ejemplo: 1234");
                         number = scanner.nextLine();
                         if (!validateField(number, NUMBER_REGEX)) {
                             number = null;
@@ -106,6 +128,7 @@ public class Address {
 
                     if(city == null) {
                         System.out.println("Ingrese la ciudad:");
+                        System.out.println("Ejemplo: Springfield");
                         city = scanner.nextLine();
                         if (!validateField(city, ADDRESS_REGEX)) {
                             city = null;
@@ -115,6 +138,7 @@ public class Address {
 
                     if(state == null) {
                         System.out.println("Ingrese la provincia:");
+                        System.out.println("Ejemplo: Buenos Aires");
                         state = scanner.nextLine();
                         if (!validateField(state, ADDRESS_REGEX)) {
                             state = null;
@@ -124,6 +148,7 @@ public class Address {
 
                     if(country == null) {
                         System.out.println("Ingrese el país:");
+                        System.out.println("Ejemplo: Argentina");
                         country = scanner.nextLine();
                         if (!validateField(country, ADDRESS_REGEX)) {
                             country = null;
@@ -133,6 +158,7 @@ public class Address {
 
                     if(postalCode == null) {
                         System.out.println("Ingrese el código postal:");
+                        System.out.println("Ejemplo: 1234");
                         postalCode = scanner.nextLine();
                         if (!validateField(postalCode, POSTAL_CODE_REGEX)) {
                             postalCode = null;
@@ -152,13 +178,13 @@ public class Address {
 
     @Override
     public String toString() {
-        return  "\n-------------------Domicilio-------------------" +
+        return  "\n-------------------------Domicilio--------------------------" +
                 "\nCalle: " + street +
                 "\nNumero: " + number +
                 "\nCiudad: " + city +
                 "\nProvincia: " + state +
                 "\nPaís: " + country +
                 "\nCódigo postal: " + postalCode +
-                "\n----------------------------------------------";
+                "\n------------------------------------------------------------";
     }
 }
