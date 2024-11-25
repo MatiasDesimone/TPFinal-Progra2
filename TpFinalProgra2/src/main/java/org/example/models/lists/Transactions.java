@@ -45,17 +45,17 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
 
     @Override
     public void update() {
-        //No supimos que podíamos updatear de las transacciones...
+        System.out.println("No se pueden modificar transacciones ya realizadas.");
     }
 
     @Override
     public void delete() {
-        //Tampoco está bueno borrar transacciones... Mejor guardarlas por si acaso.
+        System.out.println("No se pueden eliminar transacciones.");
     }
 
     private Transaction createTransaction(){
         Scanner scanner = new Scanner(System.in);
-        Client loggedClient = getLoggedInClient();
+        Client loggedClient = Bank.getInstance().getLoggedInClient();
         String accountId = null;
         String ownerCBU = null;
         String recipientCBU = null;
@@ -72,14 +72,16 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                 Account accountRecipient = null;
                 if (accountId == null) {
                     System.out.println("Ingrese la cuenta desde la que desea trasnferir:");
-                    for(Account account : loggedClient.getAccounts().getList()){
-                        System.out.println(account.getAccountType().getTypeId()+") " + account.getAccountType().getDescription());
+                    for(Account account : loggedClient.getAccounts().getList()) {
+                        if (account.isActive()){
+                            System.out.println(account.getAccountType().getTypeId() + ") " + account.getAccountType().getDescription());
+                        }
                     }
                     System.out.println("0) Cancelar.");
                     int option = scanner.nextInt();
                     scanner.nextLine();
                     if (option == 0) {
-                        System.out.println("Creación de tarjeta cancelada.");
+                        System.out.println("Operación cancelada.");
                         return null;
                     }
                     if(option < 1 || option > EAccountType.values().length){
@@ -121,12 +123,29 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                         }
                     }
                     if(recipientCBU != null){
-                        accountRecipient = Bank.getInstance().getClients().getList().getFirst().getAccountByCBU(recipientCBU);
+                        accountRecipient = Bank.getInstance().getClients().getAccountByCBU(recipientCBU);
+                        recipientCBU = accountRecipient.getCbu();
                     } else if(recipientAlias != null){
-                        accountRecipient = Bank.getInstance().getClients().getList().getFirst().getAccountByAlias(recipientAlias);
+                        accountRecipient = Bank.getInstance().getClients().getAccountByAlias(recipientAlias);
                         recipientCBU = accountRecipient.getCbu();
                     }else {
                         throw new NotFoundException("No se encontró la cuenta del destinatario.");
+                    }
+
+                    if (accountOwner.getAccountType() == EAccountType.CUENTA_DOLARES && accountRecipient.getAccountType() != EAccountType.CUENTA_DOLARES) {
+                        recipientAlias = null;
+                        recipientCBU = null;
+                        throw new InvalidFieldException("Las transferencias desde una cuenta en dólares solo pueden realizarse a otra cuenta en dólares.");
+                    }
+                    if (accountOwner.getAccountType() == EAccountType.CAJA_AHORRO && accountRecipient.getAccountType() != EAccountType.CAJA_AHORRO && accountRecipient.getAccountType() != EAccountType.CUENTA_CORRIENTE) {
+                        recipientAlias = null;
+                        recipientCBU = null;
+                        throw new InvalidFieldException("Las transferencias desde una Caja de Ahorro solo pueden realizarse a otra Caja de Ahorro o a una Cuenta Corriente.");
+                    }
+                    if (accountOwner.getAccountType() == EAccountType.CUENTA_CORRIENTE && accountRecipient.getAccountType() != EAccountType.CUENTA_CORRIENTE && accountRecipient.getAccountType() != EAccountType.CAJA_AHORRO) {
+                        recipientAlias = null;
+                        recipientCBU = null;
+                        throw new InvalidFieldException("Las transferencias desde una Cuenta Corriente solo pueden realizarse a otra Cuenta Corriente o a una Caja de Ahorro.");
                     }
                 }
 
@@ -143,16 +162,17 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
                     description = ETransactionDescription.values()[option - 1];
                 }
 
-                if(amount == 0){
+                if (amount == 0) {
                     System.out.println("Ingrese el monto a transferir:");
                     String amountInput = scanner.nextLine();
-                    if(amount <= 0 || !amountInput.matches(AMOUNT_REGEX)){
-                        throw new InvalidFieldException("Monto inválido. Recuerde, solo se permiten números.");
+                    double parsedAmount = Double.parseDouble(amountInput);
+                    if (parsedAmount < 1000 || !amountInput.matches(AMOUNT_REGEX)) {
+                        throw new InvalidFieldException("Monto inválido. Recuerde, el monto mínimo es $1000.");
                     }
-                    if(Double.parseDouble(amountInput) > accountOwner.getBalance()){
+                    if (parsedAmount > accountOwner.getBalance()) {
                         throw new InvalidFieldException("Saldo insuficiente.");
                     }
-                    amount = Double.parseDouble(amountInput);
+                    amount = parsedAmount;
                     accountRecipient.setBalance(accountRecipient.getBalance() + amount);
                     accountOwner.setBalance(accountOwner.getBalance() - amount);
                 }
@@ -184,6 +204,9 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
 
     public static void readOutTransactions(Client client){
         System.out.println("\n------------------------Transacciones salientes------------------------");
+        if(client.getTransactions().getList().isEmpty()) {
+            System.out.println("\nNo se encontraron transacciones salientes.\n\n");
+        }
         for(Transaction transaction : client.getTransactions().getList()){
             System.out.println("ID de transacción: " + transaction.getTransactionId());
             System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
@@ -192,26 +215,33 @@ public class Transactions extends GenericList<Transaction> implements ICRUD {
             System.out.println("Descripción: " + transaction.getDescription().getDescription());
             System.out.println("Fecha: " + transaction.getDate());
             System.out.println("Estado: " + transaction.getStatus().getDescription());
-            System.out.println("------------------------------------------------------------");
+            System.out.println("-----------------------------------------------------------------------\n");
         }
     }
 
-    public static void readInTransactions(Client client){
+
+    public static void readInTransactions(Client client) {
         System.out.println("\n------------------------Transacciones entrantes------------------------");
-        for(Client client1 : Bank.getInstance().getClients().getList()){
-            for(Transaction transaction : client1.getTransactions().getList()){
-                if(transaction.getRecipientCBU().equals(client.getAccountByType(EAccountType.CUENTA_CORRIENTE).getCbu())){
-                    System.out.println("ID de transacción: " + transaction.getTransactionId());
-                    System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
-                    System.out.println("CBU del destinatario: " + transaction.getRecipientCBU());
-                    System.out.println("Monto: " + transaction.getAmount());
-                    System.out.println("Descripción: " + transaction.getDescription().getDescription());
-                    System.out.println("Fecha: " + transaction.getDate());
-                    System.out.println("Estado: " + transaction.getStatus().getDescription());
-                    System.out.println("------------------------------------------------------------");
+        boolean found = false;
+        for (Client client1 : Bank.getInstance().getClients().getList()) {
+            for (Transaction transaction : client1.getTransactions().getList()) {
+                for (Account account : client.getAccounts().getList()) {
+                    if (transaction.getRecipientCBU().equals(account.getCbu())) {
+                        System.out.println("ID de transacción: " + transaction.getTransactionId());
+                        System.out.println("CBU del propietario: " + transaction.getOwnerCBU());
+                        System.out.println("CBU del destinatario: " + transaction.getRecipientCBU());
+                        System.out.println("Monto: " + transaction.getAmount());
+                        System.out.println("Descripción: " + transaction.getDescription().getDescription());
+                        System.out.println("Fecha: " + transaction.getDate());
+                        System.out.println("Estado: " + transaction.getStatus().getDescription());
+                        System.out.println("-----------------------------------------------------------------------\n");
+                        found = true;
+                    }
                 }
             }
         }
+        if (!found) {
+            System.out.println("\nNo se encontraron transacciones entrantes.\n\n");
+        }
     }
-
 }

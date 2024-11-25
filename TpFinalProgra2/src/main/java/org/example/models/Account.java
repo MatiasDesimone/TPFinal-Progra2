@@ -1,7 +1,6 @@
 package org.example.models;
 
 import org.example.enums.EAccountType;
-import org.example.models.lists.Transactions;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +15,6 @@ public class Account {
     private String accountId;
     private EAccountType accountType;
     private double balance;
-    private double maintenanceFee;
     private boolean active;
     private LocalDateTime createdAt;
     private String alias;
@@ -30,7 +28,6 @@ public class Account {
         this.accountId = UUID.randomUUID().toString();
         this.accountType = accountType;
         this.balance = balance;
-        this.maintenanceFee = accountType.getMaintenanceFee();
         this.active = true;
         this.createdAt = LocalDateTime.now();
         this.alias = generateUniqueAlias();
@@ -67,14 +64,6 @@ public class Account {
 
     public void setBalance(double balance) {
         this.balance = balance;
-    }
-
-    public double getMaintenanceFee() {
-        return maintenanceFee;
-    }
-
-    public void setMaintenanceFee(double maintenanceFee) {
-        this.maintenanceFee = maintenanceFee;
     }
 
     public boolean isActive() {
@@ -155,7 +144,7 @@ public class Account {
     public String generateRandomCBU(){
         StringBuilder cbu = new StringBuilder();
         cbu.append(BANK_IDENTIFIER);
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 14; i++) {
             cbu.append((int) (Math.random() * 10));
         }
         return cbu.toString();
@@ -172,15 +161,15 @@ public class Account {
 
     @Override
     public String toString() {
-        return  "\n------------------------Cuenta------------------------" +
+        return  "\n---------------------------Cuenta---------------------------" +
                 "\nID de cuenta: " + accountId +
                 "\nTipo de cuenta: " + accountType.getDescription() +
                 "\nSaldo: " + balance +
-                "\nCosto de Mantenimiento: " + maintenanceFee +
                 "\nActivo: " + active +
                 "\nFecha de creación: " + createdAt +
                 "\nAlias: " + alias +
                 "\nCBU: " + cbu +
-                "\n----------------------------------------------------";
+                "\n------------------------------------------------------------";
     }
 }
+

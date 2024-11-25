@@ -108,7 +108,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "\n------------------------Transacción------------------------" +
+        return  "\n------------------------Transacción------------------------" +
                 "\nID de transacción: " + transactionId +
                 "\nID de cuenta: " + accountId +
                 "\nCBU del propietario: " + ownerCBU +
