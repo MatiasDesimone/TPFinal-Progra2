@@ -140,7 +140,6 @@ public class Bank {
         this.existingCBU = existingCBU;
     }
 
-
     public int login(String email, String password) {
         Admin admin = getAdminByEmailAndPassword(email, password);
         if (admin != null) {
