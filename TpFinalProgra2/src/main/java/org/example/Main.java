@@ -96,14 +96,7 @@ public class Main {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("\nMenú de Cliente");
-            System.out.println("1) Acceder al menu de visualizacion.");
-            System.out.println("2) Crear una cuenta.");
-            System.out.println("3) Realizar una transferencia.");
-            System.out.println("4) Crear una tarjeta.");
-            System.out.println("5) Otras operaciones.");
-            System.out.println("6) Logout");
-            System.out.print("Seleccione una opción: ");
+            clientMenu();
             try {
                 int option = scanner.nextInt();
                 scanner.nextLine();
@@ -142,17 +135,23 @@ public class Main {
         }
     }
 
+    private static void clientMenu() {
+        System.out.println("\nMenú de Cliente");
+        System.out.println("1) Acceder al menu de visualizacion.");
+        System.out.println("2) Crear una cuenta.");
+        System.out.println("3) Realizar una transferencia.");
+        System.out.println("4) Crear una tarjeta.");
+        System.out.println("5) Otras operaciones.");
+        System.out.println("6) Logout");
+        System.out.print("Seleccione una opción: ");
+    }
+
     private static void adminMenu(Bank bank) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("\nMenú de Administrador");
-            System.out.println("1) Acceder al menu de visualizacion.");
-            System.out.println("2) Acceder al menu de updates.");
-            System.out.println("3) Acceder al menu de eliminación.");
-            System.out.println("4) Logout");
-            System.out.print("Seleccione una opción: ");
+            adminMenu();
             try {
                 int option = scanner.nextInt();
                 scanner.nextLine();
@@ -177,6 +176,15 @@ public class Main {
                 scanner.nextLine();
             }
         }
+    }
+
+    private static void adminMenu() {
+        System.out.println("\nMenú de Administrador");
+        System.out.println("1) Acceder al menu de visualizacion.");
+        System.out.println("2) Acceder al menu de updates.");
+        System.out.println("3) Acceder al menu de eliminación.");
+        System.out.println("4) Logout");
+        System.out.print("Seleccione una opción: ");
     }
 }
 

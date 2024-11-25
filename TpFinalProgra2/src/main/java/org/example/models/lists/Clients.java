@@ -200,7 +200,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
     }
 
     private static void clientUpdateMenu() {
-        System.out.println("Seleccione la operación que desea realizar:");
+        System.out.println("\nSeleccione la operación que desea realizar:");
         System.out.println("1) Actualizar datos personales.");
         System.out.println("2) Mover saldo de una cuenta a otra.");
         System.out.println("3) Solicitar una BAJA.");
@@ -328,7 +328,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
     }
 
     private static void clientReadMenu() {
-        System.out.println("Seleccione la consulta que desea realizar:");
+        System.out.println("\nSeleccione la consulta que desea realizar:");
         System.out.println("1) Datos de usuario.");
         System.out.println("2) Datos de cuentas.");
         System.out.println("3) Datos de tarjetas.");
@@ -605,7 +605,7 @@ public class Clients extends GenericList<Client> implements ICRUD {
     }
 
     private void clientPersonalUpdateMenu() {
-        System.out.println("Seleccione el campo que desea actualizar:");
+        System.out.println("\nSeleccione el campo que desea actualizar:");
         System.out.println("1) Nombre.");
         System.out.println("2) Apellido.");
         System.out.println("3) Email.");

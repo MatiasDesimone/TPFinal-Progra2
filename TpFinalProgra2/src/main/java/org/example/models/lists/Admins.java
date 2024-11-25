@@ -231,7 +231,7 @@ public class Admins extends GenericList<Admin> implements ICRUD {
     }
 
     private static void adminReadMenu() {
-        System.out.println("Seleccione la consulta que desea realizar:");
+        System.out.println("\nSeleccione la consulta que desea realizar:");
         System.out.println("1) Ver mis datos de administrador.");
         System.out.println("2) Ver datos completos de un usuario por ID.");
         System.out.println("3) Ver datos completos de todos los usuarios.");
@@ -376,7 +376,7 @@ public class Admins extends GenericList<Admin> implements ICRUD {
     }
 
     private void adminPersonalUpdateMenu() {
-        System.out.println("Seleccione el campo que desea actualizar:");
+        System.out.println("\nSeleccione el campo que desea actualizar:");
         System.out.println("1) Nombre.");
         System.out.println("2) Apellido.");
         System.out.println("3) Email.");
@@ -385,7 +385,7 @@ public class Admins extends GenericList<Admin> implements ICRUD {
     }
 
     private static void adminUpdateMenu() {
-        System.out.println("Seleccione la opción que desea realizar:");
+        System.out.println("\nSeleccione la opción que desea realizar:");
         System.out.println("1) Actualizar datos personales.");
         System.out.println("2) Actualizar el estado de un cliente.");
         System.out.println("3) Actualizar el estado de una cuenta.");
